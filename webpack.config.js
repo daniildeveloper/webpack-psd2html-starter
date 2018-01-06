@@ -1,7 +1,10 @@
 const path = require('path'),
     webpack = require('webpack'),
+    HtmlWebpackPlugin = require('html-webpack-plugin'),
     browserSyncPlugin = require('browser-sync-webpack-plugin'),
     extractTextPlugin = require('extract-text-webpack-plugin');
+
+const sourcePath = './src/';
 
 module.exports = {
     entry: './app.js',
@@ -41,6 +44,13 @@ module.exports = {
                 test: /node_modules\/dist\/bootstrap\/js\//,
                 loader: 'imports?jQuery=jquery'
             },
+            {
+                test: /\.pug$/,
+                loader: 'pug-loader',
+                options: {
+                    pretty: true
+                }
+            }
             
         ]
     },
@@ -50,7 +60,7 @@ module.exports = {
             host: 'localhost',
             port: '3000',
             server: {
-                baseDir: './',
+                baseDir: './dist/',
             },
         }),
         //чтобы в любом месте сразу писать через $
@@ -58,5 +68,10 @@ module.exports = {
             $: 'jquery',
             jQuery: 'jquery'
         }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            chunks: ['index'],
+            template: sourcePath + './pug/index.pug'
+        })
     ]
 };
